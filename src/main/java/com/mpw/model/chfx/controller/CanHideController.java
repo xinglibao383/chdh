@@ -6,8 +6,10 @@ import com.mpw.model.chfx.domain.dto.HideDTO;
 import com.mpw.model.chfx.domain.dto.HidePossibilityPreDTO;
 import com.mpw.model.chfx.domain.vo.CanHideVO;
 import com.mpw.model.chfx.domain.vo.ConcealmentVO;
+import com.mpw.model.chfx.domain.vo.HidePossibilityVO;
 import com.mpw.model.chfx.domain.vo.MaskVO;
 import com.mpw.model.chfx.service.ICanHideService;
+import com.mpw.model.chfx.service.impl.HideService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +29,9 @@ public class CanHideController {
      */
     @Autowired
     private ICanHideService canHideService;
+
+    @Autowired
+    private HideService hideService;
 
     /**
      * 判断地图上一个区域是否可以隐蔽
@@ -51,6 +56,12 @@ public class CanHideController {
     @ApiOperation("隐蔽概率分析")
     public ConcealmentVO hiddenProbabilityAnalysis(@RequestBody ConcealmentDTO query) {
         return canHideService.hiddenProbabilityAnalysis(query);
+    }
+
+    @PostMapping("hiddenProbability/V2")
+    @ApiOperation("隐蔽概率分析V2")
+    public HidePossibilityVO hiddenProbabilityAnalysisV2(@RequestBody ConcealmentDTO query) {
+        return hideService.hiddenProbabilityAnalysis(query);
     }
 
     /**
