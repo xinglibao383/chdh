@@ -54,6 +54,27 @@ public class DasqueradeDTO implements Serializable {
     @ApiModelProperty("敌方火力点组信息")
     private List<FireGroupDTO> fireGroupList;
 
+    private HidePossibilityPreDTO possibilityPreDTO;
+
+    public HidePossibilityPreDTO getPossibilityPreDTO() {
+        return possibilityPreDTO;
+    }
+
+    public void setPossibilityPreDTO(HidePossibilityPreDTO possibilityPreDTO) {
+        this.possibilityPreDTO = possibilityPreDTO;
+    }
+
+    public DasqueradeDTO(String appointmentArea, Double baseLng, Double baseLat, Integer weaponPureHeight, String season, List<VegetationDTO> vegetationDTOList, List<FireGroupDTO> fireGroupList, HidePossibilityPreDTO possibilityPreDTO) {
+        this.appointmentArea = appointmentArea;
+        this.baseLng = baseLng;
+        this.baseLat = baseLat;
+        this.weaponPureHeight = weaponPureHeight;
+        this.season = season;
+        this.vegetationDTOList = vegetationDTOList;
+        this.fireGroupList = fireGroupList;
+        this.possibilityPreDTO = possibilityPreDTO;
+    }
+
     public String getAppointmentArea() {
         return appointmentArea;
     }

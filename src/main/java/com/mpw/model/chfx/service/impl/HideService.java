@@ -37,6 +37,59 @@ public class HideService {
     @Autowired
     private XSyfxServiceImpl xSyfxService;
 
+    public MaskVOV2 maskDegreeAnalysis(DasqueradeDTO query) {
+        MaskVOV2 result = new MaskVOV2();
+
+        xSyfxService.checkArea(query.getAppointmentArea());
+
+        for (FireGroupDTO fireGroupDTO : query.getFireGroupList()) {
+            xSyfxService.checkPoint(fireGroupDTO.getBaseLng(), fireGroupDTO.getBaseLat());
+        }
+
+        HidePossibilityPreDTO preDTO = query.getPossibilityPreDTO();
+        List<GreenArea> greenAreas = new ArrayList<>();
+        greenAreas.addAll(preDTO.getBlueGreenAreas());
+        greenAreas.addAll(preDTO.getRedGreenAreas());
+
+        for (FireGroupDTO fireGroupDTO : query.getFireGroupList()) {
+            fireGroupDTO.setWeaponPureHeight(fireGroupDTO.getWeaponPureHeight() + getBaseHeight(fireGroupDTO.getBaseLng(), fireGroupDTO.getBaseLat()));
+        }
+
+        // 根据装备部署范围查询网格列表
+        List<DemCsv> redDemCsvList = demCsvMapper.selectByArea(query.getAppointmentArea());
+        if (redDemCsvList == null || redDemCsvList.isEmpty()) {
+            throw new RuntimeException("作战区域处无地形数据，无法计算。");
+        } else {
+            if (query.getSeason().equals("summer_fall")) {
+                for (int i = 0; i < redDemCsvList.size(); i++) {
+                    DemCsv temp = redDemCsvList.get(i);
+                    for (GreenArea greenArea : greenAreas) {
+                        if (GeoUtil.getGeometry(greenArea.getArea()).contains(GeoUtil.getGeometry(temp.getGeometryStr()))) {
+                            temp.setValue((int) (temp.getValue() + greenArea.getHeight()));
+                        }
+                    }
+                }
+            }
+
+            for (FireGroupDTO fireGroupDTO : query.getFireGroupList()) {
+                judge(fireGroupDTO.getWeaponPureHeight(), query.getAppointmentArea(), redDemCsvList, fireGroupDTO.getBaseLng(), fireGroupDTO.getBaseLat());
+            }
+
+            int count = 0;
+            for (DemCsv demCsv : redDemCsvList) {
+                if (demCsv.getCanHide() == 1) ++count;
+            }
+
+            result.setCanHideArea(count * 0.03 * 0.03);
+            result.setCanNotHideArea((redDemCsvList.size() - count) * 0.03 * 0.03);
+            result.setTotalArea(redDemCsvList.size() * 0.03 * 0.03);
+            result.setRatio(result.getCanHideArea() / result.getTotalArea());
+            result.setDemCsvList(redDemCsvList);
+        }
+
+        return result;
+    }
+
     public void judge(int weaponPureHeight, String deployArea, List<DemCsv> demCsvList, Double lng, Double lat) {
         DemCsv demCsv = demCsvMapper.selectByPoint(CanSeeServiceImpl.getPointStr(lng, lat));
         if (demCsv == null) {
@@ -267,4 +320,6 @@ public class HideService {
             demCsv.setDirection(calculateDirection(baseLng, baseLat, demCsv.getCenterLng(), demCsv.getCenterLat()));
         }
     }
+
+
 }

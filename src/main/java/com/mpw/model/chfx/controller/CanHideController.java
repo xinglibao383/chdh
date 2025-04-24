@@ -4,10 +4,7 @@ import com.mpw.model.chfx.domain.dto.ConcealmentDTO;
 import com.mpw.model.chfx.domain.dto.DasqueradeDTO;
 import com.mpw.model.chfx.domain.dto.HideDTO;
 import com.mpw.model.chfx.domain.dto.HidePossibilityPreDTO;
-import com.mpw.model.chfx.domain.vo.CanHideVO;
-import com.mpw.model.chfx.domain.vo.ConcealmentVO;
-import com.mpw.model.chfx.domain.vo.HidePossibilityVO;
-import com.mpw.model.chfx.domain.vo.MaskVO;
+import com.mpw.model.chfx.domain.vo.*;
 import com.mpw.model.chfx.service.ICanHideService;
 import com.mpw.model.chfx.service.impl.HideService;
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +82,11 @@ public class CanHideController {
         return canHideService.judgeMask(query);
     }
 
+    @PostMapping("camouflageDegree/V2")
+    @ApiOperation("伪装程度分析V2")
+    public MaskVOV2 maskDegreeAnalysis(@RequestBody DasqueradeDTO query) {
+        return hideService.maskDegreeAnalysis(query);
+    }
 
     /**
      * 伪装程度分析
