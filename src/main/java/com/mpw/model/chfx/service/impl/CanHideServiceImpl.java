@@ -1,15 +1,14 @@
 package com.mpw.model.chfx.service.impl;
 
-import com.mpw.model.chfx.domain.dto.ConcealmentDTO;
-import com.mpw.model.chfx.domain.dto.DasqueradeDTO;
-import com.mpw.model.chfx.domain.dto.HideDTO;
-import com.mpw.model.chfx.domain.dto.VegetationDTO;
+import com.mpw.model.chfx.domain.dto.*;
 import com.mpw.model.chfx.domain.entity.DemCsv;
+import com.mpw.model.chfx.domain.entity.GreenArea;
 import com.mpw.model.chfx.domain.entity.JdEquip;
 import com.mpw.model.chfx.domain.vo.*;
 import com.mpw.model.chfx.mapper.XDemCsvMapper;
 import com.mpw.model.chfx.mapper.JdEquipMapper;
 import com.mpw.model.chfx.service.ICanHideService;
+import com.mpw.model.chfx.service.IGreenAreaService;
 import com.mpw.model.common.enums.DEMType1Enum;
 import com.mpw.model.common.util.GeoUtil;
 import com.mpw.model.common.util.PointUtil;
@@ -35,6 +34,9 @@ public class CanHideServiceImpl implements ICanHideService {
 
     @Autowired
     private JdEquipMapper jdEquipMapper;
+
+    @Autowired
+    private IGreenAreaService greenAreaService;
 
     public static Geometry getPoint(Double lng, Double lat) {
         // POINT(_ _)
@@ -234,6 +236,11 @@ public class CanHideServiceImpl implements ICanHideService {
      */
     @Override
     public ConcealmentVO hiddenProbabilityAnalysis(ConcealmentDTO query) {
+        HidePossibilityPreDTO preDTO = query.getPossibilityPreDTO();
+        List<GreenArea> greenAreas = new ArrayList<>();
+        greenAreas.addAll(preDTO.getBlueGreenAreas());
+        greenAreas.addAll(preDTO.getRedGreenAreas());
+
         //校验红方任务区域
         xSyfxService.checkArea(query.getRedDeployRange());
         //校验蓝方任务区域
@@ -259,10 +266,28 @@ public class CanHideServiceImpl implements ICanHideService {
         List<DemCsv> demCsvListRed = demCsvMapper.selectByArea(query.getRedDeployRange());
         if (demCsvListRed == null || demCsvListRed.isEmpty()) {
             throw new RuntimeException("红方作战区域处无地形数据，无法计算。");
+        } else {
+            for (int i = 0; i < demCsvListRed.size(); i++) {
+                DemCsv demCsv = demCsvListRed.get(i);
+                for (GreenArea greenArea : greenAreas) {
+                    if (GeoUtil.getGeometry(greenArea.getArea()).contains(GeoUtil.getGeometry(demCsv.getGeometryStr()))) {
+                        demCsv.setValue((int) (demCsv.getValue() + greenArea.getHeight()));
+                    }
+                }
+            }
         }
         List<DemCsv> demCsvListBlue = demCsvMapper.selectByArea(query.getBlueDeployRange());
         if (demCsvListBlue == null || demCsvListBlue.isEmpty()) {
             throw new RuntimeException("蓝方作战区域处无地形数据，无法计算。");
+        } else {
+            for (int i = 0; i < demCsvListBlue.size(); i++) {
+                DemCsv demCsv = demCsvListBlue.get(i);
+                for (GreenArea greenArea : greenAreas) {
+                    if (GeoUtil.getGeometry(greenArea.getArea()).contains(GeoUtil.getGeometry(demCsv.getGeometryStr()))) {
+                        demCsv.setValue((int) (demCsv.getValue() + greenArea.getHeight()));
+                    }
+                }
+            }
         }
         // 单位面积
         double unitArea = 0.03 * 0.03 / GeoUtil.getGeometry(demCsvListRed.get(0).getGeometryStr()).getArea();
@@ -798,6 +823,13 @@ public class CanHideServiceImpl implements ICanHideService {
             e.printStackTrace();
         }
         return maskVO;
+    }
+
+    @Override
+    public HidePossibilityPreDTO hidePossibilityPre(ConcealmentDTO query) {
+        List<GreenArea> redGreenAreas = greenAreaService.selectByBigArea(query.getRedDeployRange());
+        List<GreenArea> blueGreenAreas = greenAreaService.selectByBigArea(query.getBlueDeployRange());
+        return new HidePossibilityPreDTO(redGreenAreas, blueGreenAreas);
     }
 
     /**

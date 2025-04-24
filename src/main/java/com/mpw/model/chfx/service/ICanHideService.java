@@ -3,6 +3,7 @@ package com.mpw.model.chfx.service;
 import com.mpw.model.chfx.domain.dto.ConcealmentDTO;
 import com.mpw.model.chfx.domain.dto.DasqueradeDTO;
 import com.mpw.model.chfx.domain.dto.HideDTO;
+import com.mpw.model.chfx.domain.dto.HidePossibilityPreDTO;
 import com.mpw.model.chfx.domain.vo.CanHideVO;
 import com.mpw.model.chfx.domain.vo.ConcealmentVO;
 import com.mpw.model.chfx.domain.vo.MaskVO;
@@ -45,4 +46,6 @@ public interface ICanHideService {
      * @return 查询地图上一个区域哪些位置是绝对隐蔽，以及其他区域的伪装等级的返回结果
      */
     MaskVO camouflageAnalysis(DasqueradeDTO query);
+
+    HidePossibilityPreDTO hidePossibilityPre(ConcealmentDTO query);
 }

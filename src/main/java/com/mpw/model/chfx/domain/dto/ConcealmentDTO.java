@@ -84,6 +84,32 @@ public class ConcealmentDTO implements Serializable {
     @ApiModelProperty("蓝方火力点组信息")
     private List<FireGroupDTO> fireGroupListBlue;
 
+    private HidePossibilityPreDTO possibilityPreDTO;
+
+    public HidePossibilityPreDTO getPossibilityPreDTO() {
+        return possibilityPreDTO;
+    }
+
+    public void setPossibilityPreDTO(HidePossibilityPreDTO possibilityPreDTO) {
+        this.possibilityPreDTO = possibilityPreDTO;
+    }
+
+    public ConcealmentDTO(String redDeployRange, String blueDeployRange, Double baseLat, Double baseLng, Double targetLat, Double targetLng, Integer previewHeightRed, Integer previewHeightBlue, String season, List<VegetationDTO> vegetationDTOList, List<FireGroupDTO> fireGroupListRed, List<FireGroupDTO> fireGroupListBlue, HidePossibilityPreDTO possibilityPreDTO) {
+        this.redDeployRange = redDeployRange;
+        this.blueDeployRange = blueDeployRange;
+        this.baseLat = baseLat;
+        this.baseLng = baseLng;
+        this.targetLat = targetLat;
+        this.targetLng = targetLng;
+        this.previewHeightRed = previewHeightRed;
+        this.previewHeightBlue = previewHeightBlue;
+        this.season = season;
+        this.vegetationDTOList = vegetationDTOList;
+        this.fireGroupListRed = fireGroupListRed;
+        this.fireGroupListBlue = fireGroupListBlue;
+        this.possibilityPreDTO = possibilityPreDTO;
+    }
+
     public String getRedDeployRange() {
         return redDeployRange;
     }

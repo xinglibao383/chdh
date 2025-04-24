@@ -3,6 +3,7 @@ package com.mpw.model.chfx.controller;
 import com.mpw.model.chfx.domain.dto.ConcealmentDTO;
 import com.mpw.model.chfx.domain.dto.DasqueradeDTO;
 import com.mpw.model.chfx.domain.dto.HideDTO;
+import com.mpw.model.chfx.domain.dto.HidePossibilityPreDTO;
 import com.mpw.model.chfx.domain.vo.CanHideVO;
 import com.mpw.model.chfx.domain.vo.ConcealmentVO;
 import com.mpw.model.chfx.domain.vo.MaskVO;
@@ -50,6 +51,15 @@ public class CanHideController {
     @ApiOperation("隐蔽概率分析")
     public ConcealmentVO hiddenProbabilityAnalysis(@RequestBody ConcealmentDTO query) {
         return canHideService.hiddenProbabilityAnalysis(query);
+    }
+
+    /**
+     * 隐蔽概率分析的前置方法，主要查询出植被区域，然后让用户设置高度
+     * @param query
+     * @return
+     */
+    public HidePossibilityPreDTO hidePossibilityPre(@RequestBody ConcealmentDTO query) {
+        return canHideService.hidePossibilityPre(query);
     }
 
     /**
