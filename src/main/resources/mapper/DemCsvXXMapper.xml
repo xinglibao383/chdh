@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mpw.model.chfx.mapper.DemCsvXXMapper">
+    <select id="selectByArea"  parameterType="String" resultType="com.mpw.model.chfx.domain.entity.DemCsvXX">
+        SELECT * FROM ROUTE.DEM_CSV WHERE dmgeo.ST_CONTAINS(dmgeo.ST_GEOMFROMTEXT(#{area}, 4326), GEOM)
+    </select>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mpw.model.chfx.mapper.ChRoutePointMapper">
+    <select id="selectByArea"  parameterType="String" resultType="com.mpw.model.chfx.domain.entity.ChRoutePoint">
+        SELECT * FROM ROUTE.CH_ROUTE_POINT WHERE dmgeo.ST_CONTAINS(dmgeo.ST_GEOMFROMTEXT(#{area}, 4326), GEOM)
+    </select>
+
+    <select id="selectList" resultType="com.mpw.model.chfx.domain.entity.ChRoutePoint">
+        SELECT * FROM ROUTE.CH_ROUTE_POINT
+    </select>
+
+    <update id="transGeom">
+        UPDATE ROUTE.CH_ROUTE_POINT SET geom = dmgeo.ST_GeomFromText(#{geometry}, 4326) WHERE ID = #{id}
+    </update>
+</mapper>

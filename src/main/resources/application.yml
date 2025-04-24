@@ -1,0 +1,38 @@
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+#    context-path: /chdh
+  netty:
+    connection-timeout: 60000
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  application:
+    name: mpw-route
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 1020MB
+      max-request-size: 1020MB
+  datasource:
+    driver-class-name: dm.jdbc.driver.DmDriver
+#    url: jdbc:dm://30.11.103.11:5236/ROUTE?zeroDataTimeBehavier=convertToNull&useUnicode=ture&characterEncoding=utf-8&clobAsString=true
+    #url: jdbc:dm://192.168.1.20:30236/ROUTE?zeroDataTimeBehavier=convertToNull&useUnicode=ture&characterEncoding=utf-8&clobAsString=true
+#    url: jdbc:dm://30.11.130.115:5236/ROUTE?zeroDataTimeBehavier=convertToNull&useUnicode=ture&characterEncoding=utf-8&clobAsString=true
+    #url: jdbc:dm://30.11.130.188:5236/ROUTE?zeroDataTimeBehavier=convertToNull&useUnicode=ture&characterEncoding=utf-8&clobAsString=true
+    url: jdbc:dm://localhost:5236/ROUTE?zeroDataTimeBehavier=convertToNull&useUnicode=ture&characterEncoding=utf-8&clobAsString=true
+
+    username: SYSDBA
+#    password: SYSDBA
+    #password: SYSDBA
+    password: SYSDBA12a
+    druid:
+      min-idle: 2
+      max-active: 10
+      test-while-idle: false

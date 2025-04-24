@@ -1,0 +1,1 @@
+{"probabilityZones":[{"coordinates":[],"range":"高概率 (≥ 60%)","pointCount":0},{"coordinates":[],"range":"低概率 (≤ 40%)","pointCount":0},{"coordinates":[],"range":"中概率 (40%-60%)","pointCount":0}],"noShootReasons":[],"totalArea":50.0,"shootableArea":0.0,"noShootableArea":0.0,"statistics":{"maxDynamicPressure":0.0,"maxOverpressure":0.0,"maxImpulse":0.0}}
