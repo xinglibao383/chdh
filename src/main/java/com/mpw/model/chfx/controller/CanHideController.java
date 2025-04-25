@@ -66,6 +66,8 @@ public class CanHideController {
      * @param query
      * @return
      */
+    @PostMapping("hiddenProbability/pre")
+    @ApiOperation("隐蔽概率分析的前置方法")
     public HidePossibilityPreDTO hidePossibilityPre(@RequestBody ConcealmentDTO query) {
         return canHideService.hidePossibilityPre(query);
     }
