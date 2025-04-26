@@ -321,4 +321,8 @@ public class HideService {
     public List<GreenArea> getGreenAreas(String area) {
         return greenAreaService.selectByBigArea(area);
     }
+
+    public List<GreenArea> getGreenAreas(GreenDTOV2 query) {
+        return greenAreaService.selectByLine(query);
+    }
 }

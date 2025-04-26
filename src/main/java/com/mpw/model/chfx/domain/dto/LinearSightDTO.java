@@ -1,5 +1,6 @@
 package com.mpw.model.chfx.domain.dto;
 
+import com.mpw.model.chfx.domain.entity.GreenArea;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -66,6 +67,30 @@ public class LinearSightDTO implements Serializable {
      */
     @ApiModelProperty("植被区域信息")
     private List<VegetationDTO> vegetationDTOList;
+
+    @ApiModelProperty("植被区域列表NEW")
+    private List<GreenArea> greenAreaList;
+
+    public List<GreenArea> getGreenAreaList() {
+        return greenAreaList;
+    }
+
+    public void setGreenAreaList(List<GreenArea> greenAreaList) {
+        this.greenAreaList = greenAreaList;
+    }
+
+    public LinearSightDTO(Double baseLng, Double baseLat, Integer weaponPureHeight, Double targetLng, Double targetLat, Integer targetHeight, List<String> environmentalValue, String season, List<VegetationDTO> vegetationDTOList, List<GreenArea> greenAreaList) {
+        this.baseLng = baseLng;
+        this.baseLat = baseLat;
+        this.weaponPureHeight = weaponPureHeight;
+        this.targetLng = targetLng;
+        this.targetLat = targetLat;
+        this.targetHeight = targetHeight;
+        this.environmentalValue = environmentalValue;
+        this.season = season;
+        this.vegetationDTOList = vegetationDTOList;
+        this.greenAreaList = greenAreaList;
+    }
 
     public Double getBaseLng() {
         return baseLng;

@@ -1,19 +1,20 @@
 package com.mpw.model.chfx.controller;
 
-import com.mpw.model.chfx.domain.dto.CanSeeDTO;
-import com.mpw.model.chfx.domain.dto.CanSeeLineDTO;
-import com.mpw.model.chfx.domain.dto.LinearSightDTO;
-import com.mpw.model.chfx.domain.dto.VisualDomainDTO;
+import com.mpw.model.chfx.domain.dto.*;
+import com.mpw.model.chfx.domain.entity.GreenArea;
 import com.mpw.model.chfx.domain.vo.CanSeeLineVO;
 import com.mpw.model.chfx.domain.vo.CanSeeVO;
 import com.mpw.model.chfx.domain.vo.VisualDomainVO;
 import com.mpw.model.chfx.service.ICanSeeService;
+import com.mpw.model.chfx.service.impl.HideService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 判断通视的Controller类
@@ -27,6 +28,31 @@ public class CanSeeController {
      */
     @Autowired
     private ICanSeeService canSeeService;
+
+    @Autowired
+    private HideService hideService;
+
+    /**
+     * 根据区域获取指定区域的植被区域列表
+     * @param query
+     * @return
+     */
+    @PostMapping("getGreenAreasByArea")
+    @ApiOperation("根据区域获取指定区域的植被区域列表")
+    public List<GreenArea> getGreenAreas(@RequestBody GreenDTO query) {
+        return hideService.getGreenAreas(query.getArea());
+    }
+
+    /**
+     * 根据直线获取植被区域列表
+     * @param query
+     * @return
+     */
+    @PostMapping("getGreenAreasByLine")
+    @ApiOperation("根据直线获取植被区域列表")
+    public List<GreenArea> getGreenAreasByLine(@RequestBody GreenDTOV2 query) {
+        return hideService.getGreenAreas(query);
+    }
 
     /**
      * 判断地图上一个区域是否通视

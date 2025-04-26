@@ -2,6 +2,7 @@ package com.mpw.model.chfx.service.impl;
 
 import com.mpw.model.chfx.domain.dto.*;
 import com.mpw.model.chfx.domain.entity.DemCsv;
+import com.mpw.model.chfx.domain.entity.GreenArea;
 import com.mpw.model.chfx.domain.vo.*;
 import com.mpw.model.chfx.mapper.XDemCsvMapper;
 import com.mpw.model.chfx.service.ICanSeeService;
@@ -333,6 +334,17 @@ public class CanSeeServiceImpl implements ICanSeeService {
         List<DemCsv> demCsvList = demCsvMapper.selectByArea(query.getAppointmentArea());
         if (demCsvList == null || demCsvList.isEmpty()) {
             throw new RuntimeException("所选任务区域无地形数据。");
+        } else {
+            List<GreenArea> greenAreaList = query.getGreenAreaList();
+            if (greenAreaList != null && !greenAreaList.isEmpty()) {
+                for (DemCsv demCsv : demCsvList) {
+                    for (GreenArea greenArea : greenAreaList) {
+                        if (GeoUtil.getGeometry(greenArea.getArea()).contains(GeoUtil.getGeometry(demCsv.getGeometryStr()))) {
+                            demCsv.setValue((int) (demCsv.getValue() + greenArea.getHeight()));
+                        }
+                    }
+                }
+            }
         }
         List<List<RangeVO>> result = new ArrayList<>();
 
@@ -626,6 +638,17 @@ public class CanSeeServiceImpl implements ICanSeeService {
         List<DemCsv> demCsvList = demCsvMapper.selectByLine(getWKTByGeometry(line));
         if (demCsvList == null || demCsvList.isEmpty()) {
             throw new RuntimeException("所选观测点或目标点无地形数据。");
+        } else {
+            List<GreenArea> greenAreaList = query.getGreenAreaList();
+            if (greenAreaList != null && !greenAreaList.isEmpty()) {
+                for (DemCsv demCsv : demCsvList) {
+                    for (GreenArea greenArea : greenAreaList) {
+                        if (GeoUtil.getGeometry(greenArea.getArea()).contains(GeoUtil.getGeometry(demCsv.getGeometryStr()))) {
+                            demCsv.setValue((int) (demCsv.getValue() + greenArea.getHeight()));
+                        }
+                    }
+                }
+            }
         }
 
         // +海拔
