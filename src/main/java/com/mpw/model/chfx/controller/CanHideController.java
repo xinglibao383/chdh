@@ -1,9 +1,7 @@
 package com.mpw.model.chfx.controller;
 
-import com.mpw.model.chfx.domain.dto.ConcealmentDTO;
-import com.mpw.model.chfx.domain.dto.DasqueradeDTO;
-import com.mpw.model.chfx.domain.dto.HideDTO;
-import com.mpw.model.chfx.domain.dto.HidePossibilityPreDTO;
+import com.mpw.model.chfx.domain.dto.*;
+import com.mpw.model.chfx.domain.entity.GreenArea;
 import com.mpw.model.chfx.domain.vo.*;
 import com.mpw.model.chfx.service.ICanHideService;
 import com.mpw.model.chfx.service.impl.HideService;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 隐蔽Controller类
@@ -29,6 +29,17 @@ public class CanHideController {
 
     @Autowired
     private HideService hideService;
+
+    /**
+     * 获取指定区域的植被区域列表
+     * @param query
+     * @return
+     */
+    @PostMapping("getGreenAreas")
+    @ApiOperation("获取指定区域的植被区域列表")
+    public List<GreenArea> getGreenAreas(@RequestBody GreenDTO query) {
+        return hideService.getGreenAreas(query.getArea());
+    }
 
     /**
      * 判断地图上一个区域是否可以隐蔽

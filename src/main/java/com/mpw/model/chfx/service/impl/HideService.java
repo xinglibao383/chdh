@@ -46,10 +46,7 @@ public class HideService {
             xSyfxService.checkPoint(fireGroupDTO.getBaseLng(), fireGroupDTO.getBaseLat());
         }
 
-        HidePossibilityPreDTO preDTO = query.getPossibilityPreDTO();
-        List<GreenArea> greenAreas = new ArrayList<>();
-        greenAreas.addAll(preDTO.getBlueGreenAreas());
-        greenAreas.addAll(preDTO.getRedGreenAreas());
+        List<GreenArea> greenAreas = query.getGreenAreaList();
 
         for (FireGroupDTO fireGroupDTO : query.getFireGroupList()) {
             fireGroupDTO.setWeaponPureHeight(fireGroupDTO.getWeaponPureHeight() + getBaseHeight(fireGroupDTO.getBaseLng(), fireGroupDTO.getBaseLat()));
@@ -321,5 +318,7 @@ public class HideService {
         }
     }
 
-
+    public List<GreenArea> getGreenAreas(String area) {
+        return greenAreaService.selectByBigArea(area);
+    }
 }

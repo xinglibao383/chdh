@@ -1,5 +1,6 @@
 package com.mpw.model.chfx.domain.dto;
 
+import com.mpw.model.chfx.domain.entity.GreenArea;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -54,17 +55,18 @@ public class DasqueradeDTO implements Serializable {
     @ApiModelProperty("敌方火力点组信息")
     private List<FireGroupDTO> fireGroupList;
 
-    private HidePossibilityPreDTO possibilityPreDTO;
+    @ApiModelProperty("植被区域列表")
+    private List<GreenArea> greenAreaList;
 
-    public HidePossibilityPreDTO getPossibilityPreDTO() {
-        return possibilityPreDTO;
+    public List<GreenArea> getGreenAreaList() {
+        return greenAreaList;
     }
 
-    public void setPossibilityPreDTO(HidePossibilityPreDTO possibilityPreDTO) {
-        this.possibilityPreDTO = possibilityPreDTO;
+    public void setGreenAreaList(List<GreenArea> greenAreaList) {
+        this.greenAreaList = greenAreaList;
     }
 
-    public DasqueradeDTO(String appointmentArea, Double baseLng, Double baseLat, Integer weaponPureHeight, String season, List<VegetationDTO> vegetationDTOList, List<FireGroupDTO> fireGroupList, HidePossibilityPreDTO possibilityPreDTO) {
+    public DasqueradeDTO(String appointmentArea, Double baseLng, Double baseLat, Integer weaponPureHeight, String season, List<VegetationDTO> vegetationDTOList, List<FireGroupDTO> fireGroupList, List<GreenArea> greenAreaList) {
         this.appointmentArea = appointmentArea;
         this.baseLng = baseLng;
         this.baseLat = baseLat;
@@ -72,7 +74,7 @@ public class DasqueradeDTO implements Serializable {
         this.season = season;
         this.vegetationDTOList = vegetationDTOList;
         this.fireGroupList = fireGroupList;
-        this.possibilityPreDTO = possibilityPreDTO;
+        this.greenAreaList = greenAreaList;
     }
 
     public String getAppointmentArea() {
