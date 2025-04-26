@@ -183,6 +183,66 @@ public class HideService {
         }
     }
 
+    public void getHML(List<DemCsv> demCsvList, HidePossibilityVO maskVO, Boolean red) {
+        List<MaskDegreeVO> maskDegreeVOList = new ArrayList<>();
+        Map<Integer, List<DemCsv>> maskDegree2DemCsvListMap = demCsvList.stream()
+                .collect(Collectors.groupingBy(DemCsv::getMaskDegree));
+        for (Map.Entry<Integer, List<DemCsv>> entry : maskDegree2DemCsvListMap.entrySet()) {
+            maskDegreeVOList.add(new MaskDegreeVO(entry.getKey(), entry.getValue()));
+        }
+        if (red) {
+            maskVO.setMaskDegreeVOListRed(maskDegreeVOList);
+        } else {
+            maskVO.setMaskDegreeVOListBlue(maskDegreeVOList);
+        }
+
+        // 硬编码，可以根据需要修改
+        String[] list0 = {"森林", "工厂", "军队", "公园", "居民区", "矮树"};
+        String[] list1 = {"菜地", "墓地", "农田", "草坪", "水"};
+        String[] list2 = {"其他", "未分类"};
+
+        List<MaskDegreeAreaVO> maskDegreeAreaVOList = new LinkedList<>();
+        maskDegreeAreaVOList.add(new MaskDegreeAreaVO("absolute", 0.0, new ArrayList<>()));
+        maskDegreeAreaVOList.add(new MaskDegreeAreaVO("high", 0.0, Arrays.asList(list0)));
+        maskDegreeAreaVOList.add(new MaskDegreeAreaVO("low", 0.0, Arrays.asList(list1)));
+        maskDegreeAreaVOList.add(new MaskDegreeAreaVO("uncertain", 0.0, Arrays.asList(list2)));
+        for (Map.Entry<Integer, List<DemCsv>> entry : maskDegree2DemCsvListMap.entrySet()) {
+            int index = 3, num = entry.getKey();
+            if (num == -1) {
+                index = 0;
+            } else if (num == 3 || num == 5 || num == 6 || num == 8 || num == 9 || num == 10) {
+                index = 1;
+            } else if (num == 0 || num == 1 || num == 2 || num == 4 || num == 12) {
+                index = 2;
+            }
+
+            double unitArea = 0.03 * 0.03 / GeoUtil.getGeometry(demCsvList.get(0).getGeometryStr()).getArea();
+
+            // 判断隐蔽等级，并且计算面积
+            double areaSize = 0.0;
+            for (DemCsv csv : entry.getValue()) {
+                areaSize += unitArea * GeoUtil.getGeometry(csv.getGeometryStr()).getArea();
+                if (index == 0) {
+                    csv.setMaskDegreeName("absolute");
+                } else if (index == 1) {
+                    csv.setMaskDegreeName("high");
+                } else if (index == 2) {
+                    csv.setMaskDegreeName("low");
+                } else if (index == 3) {
+                    csv.setMaskDegreeName("uncertain");
+                }
+            }
+
+            MaskDegreeAreaVO maskDegreeAreaVO = maskDegreeAreaVOList.get(index);
+            maskDegreeAreaVO.setArea(maskDegreeAreaVO.getArea() + areaSize);
+        }
+        if (red) {
+            maskVO.setMaskDegreeAreaVOListRed(maskDegreeAreaVOList);
+        } else {
+            maskVO.setMaskDegreeAreaVOListBlue(maskDegreeAreaVOList);
+        }
+    }
+
     /**
      * 隐蔽概率分析
      * 判断地图上一个区域是否可以隐蔽
@@ -282,6 +342,9 @@ public class HideService {
             result.setRatioBlue(result.getCanHideAreaBlue() / result.getTotalAreaBlue());
             result.setDemCsvListBlue(blueDemCsvList);
         }
+
+        getHML(redDemCsvList, result, true);
+        getHML(blueDemCsvList, result, false);
 
         return result;
     }
